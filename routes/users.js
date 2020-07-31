@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const { body, validationResult } = require('express-validator');
 
 const User = require('../models/User');
@@ -45,6 +47,26 @@ router.post(
       await user.save();
 
       // [SEND BACK the JSON web Token TO THE USER ]
+      // Generate jwt and send this to the user once they are registered and once they are logged in.
+      // https://jwt.io/
+      // With that userId, we can access all the contacts
+      const payload = {
+        user: { id: user.id },
+      };
+      // To generate a token, we have to sign it
+      jwt.sign(
+        payload,
+        config.get('jwtSecret'),
+        {
+          expiresIn: 360000000,
+        },
+        (err, token) => {
+          if (err) throw err;
+          // return the token
+          // the returned token includes the userId
+          res.json({ token });
+        }
+      );
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
