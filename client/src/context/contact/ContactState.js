@@ -39,6 +39,7 @@ const ContactState = (props) => {
       },
     ],
     current: null,
+    filtered: null,
   };
 
   // Pull out the state and dispatch to the reducer
@@ -69,9 +70,16 @@ const ContactState = (props) => {
   const updateContact = (contact) => {
     dispatch({ type: UPDATE_CONTACT, payload: contact });
   };
+
   // Filter Contacts
+  const filterContacts = (texts) => {
+    dispatch({ type: FILTER_CONTACTS, payload: texts });
+  };
 
   // Clear Filter
+  const clearFilter = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
 
   // Return our providers so that we can wrap our entire application with this context
   return (
@@ -81,11 +89,14 @@ const ContactState = (props) => {
       value={{
         contacts: state.contacts,
         current: state.current,
+        filtered: state.filtered,
         addContact,
         deleteContact,
         setCurrent,
         clearCurrent,
         updateContact,
+        filterContacts,
+        clearFilter,
       }}
     >
       {props.children}
