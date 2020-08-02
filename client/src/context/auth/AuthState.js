@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import axios from 'axios';
 import AuthContext from './authContext';
 import authReducer from './authReducer';
 import {
@@ -11,6 +12,7 @@ import {
   LOGOUT,
   CLEAR_ERRORS,
 } from '../types';
+import Register from '../../components/auth/Register';
 
 // Create initial state
 const AuthState = (props) => {
@@ -32,14 +34,40 @@ const AuthState = (props) => {
 
   // Actions
   // Load User - checking whether a user is logged in
+  const loadUser = () => console.log('loaduser');
 
   // Register User
+  const register = async (formData) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/api/users', formData, config);
 
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: REGISTER_FAIL,
+        payload: err.response.data.msg,
+      });
+    }
+  };
   // Login User
-
+  const login = () => console.log('login');
   // Logout
 
+  const logout = () => console.log('logout');
   // Clear Errors
+
+  const clearErrors = () =>
+    dispatch({
+      type: CLEAR_ERRORS,
+    });
 
   // Return our providers so that we can wrap our entire application with this context
   return (
@@ -52,6 +80,11 @@ const AuthState = (props) => {
         loading: state.loading,
         user: state.user,
         error: state.error,
+        register,
+        loadUser,
+        login,
+        logout,
+        clearErrors,
       }}
     >
       {props.children}
