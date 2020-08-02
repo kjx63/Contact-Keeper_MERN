@@ -13,7 +13,6 @@ import {
   LOGOUT,
   CLEAR_ERRORS,
 } from '../types';
-import Register from '../../components/auth/Register';
 
 // Create initial state
 const AuthState = (props) => {
